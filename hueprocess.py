@@ -16,9 +16,7 @@ st.set_page_config(
 st.markdown("""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
-
 html, body, [class*="css"] { font-family: 'DM Sans', sans-serif; }
-
 section[data-testid="stSidebar"] { background: #0a1628; border-right: 1px solid #c9a84c33; }
 section[data-testid="stSidebar"] * { color: #e8dfc8 !important; }
 section[data-testid="stSidebar"] .stSelectbox label,
@@ -26,16 +24,13 @@ section[data-testid="stSidebar"] .stRadio label {
     color: #c9a84c !important; font-size: 0.75rem;
     text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500;
 }
-
 .main .block-container { background: #0d1e35; padding: 2rem 2.5rem; max-width: 1100px; }
 .stApp { background: #0d1e35; }
-
 .hp-title { font-family: 'Playfair Display', serif; font-size: 2.6rem; font-weight: 700;
     color: #e8dfc8; letter-spacing: 0.02em; margin: 0; line-height: 1.1; }
 .hp-subtitle { color: #c9a84c; font-size: 0.8rem; text-transform: uppercase;
     letter-spacing: 0.18em; margin-top: 4px; }
 .hp-divider { border: none; border-top: 1px solid #c9a84c44; margin: 1.2rem 0; }
-
 .option-card { background: #112240; border: 1px solid #c9a84c33; border-radius: 10px;
     padding: 1.2rem 1.4rem; margin-bottom: 1rem; position: relative; }
 .option-card.rank-1 { border-color: #c9a84c88; background: #152a4a; }
@@ -47,18 +42,15 @@ section[data-testid="stSidebar"] .stRadio label {
 .item-value { font-size: 0.95rem; color: #e8dfc8; font-weight: 400; margin-bottom: 8px; }
 .item-reasoning { font-size: 0.78rem; color: #8fa8c8; font-style: italic;
     margin-top: -4px; margin-bottom: 8px; }
-
 .weather-box { background: #112240; border: 1px solid #c9a84c33; border-radius: 10px;
     padding: 1rem 1.2rem; margin-bottom: 1.2rem; }
 .weather-temp { font-family: 'Playfair Display', serif; font-size: 2rem; color: #e8dfc8; }
 .weather-label { font-size: 0.72rem; color: #c9a84c; text-transform: uppercase; letter-spacing: 0.1em; }
 .weather-adj { background: #1a3050; border-left: 3px solid #c9a84c; padding: 0.5rem 0.8rem;
     border-radius: 0 6px 6px 0; font-size: 0.82rem; color: #b0c4de; margin-top: 0.5rem; }
-
 .section-head { font-family: 'Playfair Display', serif; font-size: 1.3rem;
     color: #e8dfc8; margin-bottom: 0.2rem; font-weight: 600; }
 .section-sub { font-size: 0.78rem; color: #7a94b0; margin-bottom: 1rem; }
-
 .stSelectbox > div > div { background: #112240 !important; border-color: #c9a84c44 !important; color: #e8dfc8 !important; }
 </style>
 """, unsafe_allow_html=True)
@@ -92,9 +84,11 @@ REASONING = {
         "hopsack": "Hopsack's open weave handles climate shifts during multi-location days.",
         "navy": "Navy is the universal signal of competence and trustworthiness to any jury.",
         "charcoal": "Charcoal commands authority — the courtroom's equivalent of formal dress.",
+        "wool": "Wool's natural resilience keeps you looking sharp across extended proceedings.",
         "pantsuit": "A well-cut pantsuit conveys authority equal to any suit in the room.",
         "skirt suit": "A skirt suit at mid-knee length reads professional and approachable simultaneously.",
         "sheath": "A structured sheath under a blazer projects precision and preparation.",
+        "blazer": "A blazer anchors any outfit — the single most powerful upgrade available.",
     },
     "tie": {
         "silk": "Silk ties catch light subtly — signaling investment without distraction.",
@@ -102,16 +96,19 @@ REASONING = {
         "solid": "Solid ties minimize visual distraction, keeping the focus on your argument.",
         "muted": "Muted patterns acknowledge formality without claiming more than the moment requires.",
         "no tie": "Removing the tie shifts register from formal advocate to trusted counselor.",
+        "conservative": "A conservative tie signals respect for the proceeding without drawing attention.",
     },
     "shoes": {
         "oxford": "Cap-toe oxfords are the universal signal of professional preparation.",
         "derby": "Derbies allow slightly more expressive silhouette while maintaining formality.",
         "monk": "Double monks project confident individualism — acceptable above deposition level.",
         "loafer": "Penny loafers signal relaxed authority appropriate for office and mediation contexts.",
-        "pump": "A classic pump at 2–3 inches projects professional height and proportion.",
+        "pump": "A classic pump at 2-3 inches projects professional height and proportion.",
         "block heel": "Block heels provide stability across long hearing days without sacrificing authority.",
         "flat": "Pointed flats convey precision and professionalism without heel fatigue.",
         "kitten": "Kitten heels thread the needle between formal and accessible in client settings.",
+        "polished": "Polished shoes signal attention to detail — judges and jurors notice.",
+        "lace-up": "Lace-up shoes in dark leather are the civilian standard for court appearances.",
     },
     "pocket_square": {
         "white": "A white square in TV fold is the courtroom standard — nothing more is needed.",
@@ -120,7 +117,7 @@ REASONING = {
     }
 }
 
-def get_reasoning(field: str, value: str) -> str:
+def get_reasoning(field, value):
     if not value or value.lower() in ("none", "n/a", ""):
         return ""
     val_lower = value.lower()
@@ -129,7 +126,11 @@ def get_reasoning(field: str, value: str) -> str:
             return reason
     return ""
 
-# ── Wardrobe Database ─────────────────────────────────────────────────────────
+# ══════════════════════════════════════════════════════════════════════════════
+# WARDROBE DATABASE
+# To edit recommendations: find the case type section and update the add() lines.
+# Format: add("Case Type", "Role", "Gender", rank, "suit", "tie", "shoes", "socks", "accessories", "pocket_square", "note")
+# ══════════════════════════════════════════════════════════════════════════════
 
 def build_wardrobe():
     W = {}
@@ -150,18 +151,18 @@ def build_wardrobe():
     add("Jury Trial","Attorney","Female",4,"Dark charcoal blazer + matching trousers","N/A","Low block heel","Sheer nude hosiery","Pearl stud earrings only","None","Matched separates in charcoal read as a suit — flexibility without sacrificing formality.")
     add("Jury Trial","Attorney","Female",5,"Navy sheath + structured blazer","N/A","Navy pump 2\"","Sheer navy hosiery","Small gold stud earrings","None","Sheath under blazer projects precision; navy communicates institutional reliability.")
     add("Jury Trial","Attorney","Female",6,"Charcoal skirt suit","N/A","Black kitten heel","Sheer grey hosiery","Pearl or gold stud earrings only","White linen","Kitten heels on long trial days reduce fatigue while maintaining full professional register.")
-    add("Jury Trial","Client","Male",1,"Dark navy or charcoal suit","Conservative solid or stripe tie","Dark dress shoes, polished","Dark socks matching trousers","None","None","Dress as if meeting your bank manager — neat, dark, and respectful of the court.")
-    add("Jury Trial","Client","Male",2,"Dark suit, single-breasted","Solid tie, subdued color","Black or dark brown lace-up shoes","Dark matching socks","None","None","Avoid bold patterns — you want the jury focused on your character, not your clothes.")
-    add("Jury Trial","Client","Male",3,"Charcoal trousers + matching blazer","Conservative tie","Polished dress shoes","Dark socks","None","None","If you don't own a suit, matched separates in dark tones read nearly as well.")
-    add("Jury Trial","Client","Male",4,"Navy trousers + navy blazer","Tie optional if blazer is sharp","Clean loafers or oxfords","Dark socks","None","None","Navy communicates honesty — consistently rated favorably by mock jurors.")
-    add("Jury Trial","Client","Male",5,"Dark grey slacks + sport coat","No tie needed","Dark oxfords","Dark socks","None","None","A sport coat elevates your appearance without requiring a full suit.")
-    add("Jury Trial","Client","Male",6,"Dark neat trousers + button-down shirt","No tie","Clean dark shoes","Dark socks","None","None","Last resort: at minimum wear dark, pressed, clean clothing — no jeans, no sneakers.")
-    add("Jury Trial","Client","Female",1,"Dark navy or charcoal skirt suit or pantsuit","N/A","Conservative low heel or flat","Hosiery recommended","Minimal jewelry — small stud earrings only","None","Mirror your attorney's level of formality; understated and respectful reads best.")
-    add("Jury Trial","Client","Female",2,"Dark blazer + matching trousers or skirt","N/A","Low block heel or flat","Hosiery or dark tights","Small stud earrings only","None","Matched separates in dark tones are court-appropriate and widely available.")
-    add("Jury Trial","Client","Female",3,"Navy or charcoal sheath dress + blazer","N/A","Low heel","Hosiery recommended","Stud earrings only","None","A blazer over a sheath dress is one of the most universally readable professional looks.")
-    add("Jury Trial","Client","Female",4,"Dark pressed trousers + neat blouse + blazer","N/A","Modest flat or low heel","Hosiery optional","Simple earrings","None","The blazer is the single most elevating item — even over casual trousers.")
-    add("Jury Trial","Client","Female",5,"Dark skirt (knee length) + blouse","N/A","Modest flats","Hosiery recommended","Simple earrings","None","Keep the skirt at or below the knee; modest length reads respect for the proceeding.")
-    add("Jury Trial","Client","Female",6,"Dark neat trousers + button-up blouse","N/A","Flat shoes, clean","Dark hosiery or socks","None","None","At minimum: dark, pressed, and modest — jewelry-free is fine at this level.")
+    add("Jury Trial","Client","Male",1,"Dark navy or charcoal wool suit — off the rack is fine, pressed and fitted","Conservative solid or repp stripe tie in navy, burgundy or grey","Black or dark brown leather lace-up shoes, polished","Dark socks matching trouser color","None","None","Wool holds its shape across a full trial day. Jury members form impressions in the first 90 seconds — dark, fitted, and pressed is the non-negotiable baseline.")
+    add("Jury Trial","Client","Male",2,"Dark charcoal or navy suit — avoid shiny or stretchy blends","Solid tie in a subdued color — no novelty patterns","Black or dark brown leather dress shoes","Dark matching socks","None","None","Avoid bold patterns anywhere — the jury's focus belongs on your testimony, not your clothes.")
+    add("Jury Trial","Client","Male",3,"Charcoal or navy blazer + matching dark trousers — same color to read as a suit","Conservative tie","Polished leather dress shoes in black or dark brown","Dark matching socks","None","None","Matched separates in the same dark shade read nearly as well as a suit from the jury box.")
+    add("Jury Trial","Client","Male",4,"Navy blazer + dark navy or charcoal trousers","Tie optional if blazer is sharp and shirt is crisp","Clean dark leather oxfords or loafers","Dark socks","None","None","Navy communicates honesty and stability — consistently rated favorably in mock juror studies.")
+    add("Jury Trial","Client","Male",5,"Dark grey or charcoal slacks + dark structured sport coat","No tie needed if sport coat is structured","Dark leather oxfords","Dark socks","None","None","A structured sport coat over dark slacks elevates your appearance without requiring a full suit.")
+    add("Jury Trial","Client","Male",6,"Dark neat pressed trousers + white or light blue button-down collar shirt","No tie","Clean dark shoes — no sneakers or athletic footwear","Dark socks","None","None","Absolute minimum: dark, pressed, clean, collared. No jeans, no sneakers. The court is not casual.")
+    add("Jury Trial","Client","Female",1,"Dark navy or charcoal skirt suit or pantsuit — wool or wool blend preferred","N/A","Conservative low heel (2 inches max) or pointed flat in black or navy","Sheer nude or navy hosiery","Small stud earrings only in gold, silver or pearl — nothing dangling","None","Jurors assess credibility visually — understated, dark, and well-fitted communicates exactly the right message.")
+    add("Jury Trial","Client","Female",2,"Dark blazer in navy or charcoal + matching trousers or knee-length skirt","N/A","Low block heel or pointed flat in black","Sheer hosiery or dark opaque tights","Small stud earrings","None","The blazer is the single most important piece — it signals intentionality and professionalism.")
+    add("Jury Trial","Client","Female",3,"Navy or charcoal sheath dress (knee length or below) + structured blazer","N/A","Low heel in black or navy","Sheer nude or navy hosiery","Stud earrings only — no statement pieces","None","A blazer over a sheath dress is one of the most universally readable professional looks. Keep the dress solid and neckline conservative.")
+    add("Jury Trial","Client","Female",4,"Dark pressed trousers + neat fitted blouse in white or pale blue + blazer if available","N/A","Modest flat or low heel in black or dark neutral","Sheer hosiery or dark trouser socks","Simple small earrings","None","The blazer is the single most elevating item — even over modest trousers it shifts the register to professional.")
+    add("Jury Trial","Client","Female",5,"Dark knee-length skirt in wool or ponte fabric + fitted blouse","N/A","Modest flat shoes in dark neutral","Sheer hosiery recommended","Simple small earrings","None","Keep the skirt at or below the knee — modest length communicates respect for the proceeding.")
+    add("Jury Trial","Client","Female",6,"Dark neat trousers or skirt + button-up blouse in white, cream or pale blue","N/A","Flat shoes in dark neutral, clean and unscuffed","Dark hosiery or trouser socks","None","None","Irreducible minimum: dark, pressed, modest, and clean. No jeans, no athleisure, no revealing necklines.")
 
     # ── BENCH TRIAL ──────────────────────────────────────────────────────────
     add("Bench Trial","Attorney","Male",1,"Charcoal fresco single-breasted","Midnight blue silk repp","Black cap-toe oxford","Black OTC wool","Gunmetal cuff links","White linen TV fold","Judges notice sartorial competence — fresco signals deliberate professionalism.")
@@ -176,18 +177,18 @@ def build_wardrobe():
     add("Bench Trial","Attorney","Female",4,"Mid-grey pantsuit","N/A","Low block heel","Sheer grey","Pearl or gold studs","None","Grey reads scholarly — effective before academic or intellectually-oriented judges.")
     add("Bench Trial","Attorney","Female",5,"Navy sheath + blazer","N/A","Navy pump","Sheer navy","Small gold studs","None","Sheath dresses under blazers photograph cleanly for any courtroom media.")
     add("Bench Trial","Attorney","Female",6,"Dark skirt suit","N/A","Black kitten heel","Sheer nude","Pearl studs","White linen","Kitten heels remain floor-appropriate without sacrificing formality.")
-    add("Bench Trial","Client","Male",1,"Dark suit","Conservative tie","Polished dark shoes","Dark socks","None","None","Judges read attire as a proxy for respect — dress to convey you take the proceeding seriously.")
-    add("Bench Trial","Client","Male",2,"Navy blazer + dark trousers","Solid tie","Dark shoes","Dark socks","None","None","Blazer plus matching trousers is court-appropriate without requiring a full suit.")
-    add("Bench Trial","Client","Male",3,"Dark separates","Tie optional","Dark shoes","Dark socks","None","None","Pressed and dark is the floor-level requirement.")
-    add("Bench Trial","Client","Male",4,"Charcoal trousers + button-down","No tie","Dark shoes","Dark socks","None","None","If no jacket is available, at minimum wear a crisp button-down in a dark color.")
-    add("Bench Trial","Client","Male",5,"Dark slacks + polo or neat shirt","No tie","Clean shoes","Matching socks","None","None","A polo in dark, solid color is marginally acceptable — avoid graphics or logos.")
-    add("Bench Trial","Client","Male",6,"Clean dark trousers + any collared shirt","No tie","Clean footwear","Any socks","None","None","Bare minimum: collared, clean, dark, no jeans.")
-    add("Bench Trial","Client","Female",1,"Dark suit or pantsuit","N/A","Low heel","Hosiery","Small studs only","None","Mirror your attorney in formality level wherever possible.")
-    add("Bench Trial","Client","Female",2,"Dark blazer + trousers","N/A","Flat or low heel","Hosiery","Small earrings","None","A blazer is the single item that most elevates a civilian court appearance.")
-    add("Bench Trial","Client","Female",3,"Dark sheath + blazer","N/A","Modest heel","Hosiery","None","None","Keep accessories minimal — nothing distracting.")
-    add("Bench Trial","Client","Female",4,"Dark trousers + blouse","N/A","Flat","Socks or hosiery","None","None","Neat and dark is the reliable floor for any courtroom appearance.")
-    add("Bench Trial","Client","Female",5,"Dark skirt + neat top","N/A","Flat","Hosiery recommended","None","None","Knee-length or below; avoid anything fitted or sheer.")
-    add("Bench Trial","Client","Female",6,"Any dark pressed outfit","N/A","Clean footwear","Any","None","None","Pressed, modest, and dark is the irreducible minimum for a judge.")
+    add("Bench Trial","Client","Male",1,"Dark wool suit in navy or charcoal — pressed and fitted","Conservative tie in navy, grey or burgundy","Polished black or dark brown leather lace-ups","Dark matching OTC socks","None","None","Judges read attire as a direct proxy for respect. A pressed wool suit communicates that you understand the gravity of the proceeding.")
+    add("Bench Trial","Client","Male",2,"Navy blazer + dark charcoal or navy trousers in wool or ponte fabric","Solid conservative tie","Dark leather dress shoes, polished","Dark matching socks","None","None","Before a judge, blazer-and-trouser in dark structured fabric reads as serious business attire.")
+    add("Bench Trial","Client","Male",3,"Dark matched separates — blazer and trousers in the same dark shade","Tie optional — if worn, keep it solid and subdued","Dark leather shoes","Dark socks","None","None","Pressed and dark is the floor-level requirement before any judge.")
+    add("Bench Trial","Client","Male",4,"Dark charcoal or navy trousers + crisp white or light blue button-down","No tie","Dark leather shoes","Dark socks","None","None","A crisp collared shirt in white or pale blue with dark pressed trousers reads as business casual — acceptable as a minimum.")
+    add("Bench Trial","Client","Male",5,"Dark slacks + polo shirt in a solid dark color — no logos or graphics","No tie","Clean dark leather shoes","Matching dark socks","None","None","A polo in a solid dark color is the marginal minimum — only if clean and untucked is not acceptable.")
+    add("Bench Trial","Client","Male",6,"Clean dark pressed trousers + any collared shirt — no t-shirts","No tie","Clean closed-toe footwear — no sandals","Any dark socks","None","None","Bare minimum: collared, clean, dark, pressed. No jeans, no sneakers. The judge will notice.")
+    add("Bench Trial","Client","Female",1,"Dark wool or ponte suit or pantsuit — navy or charcoal","N/A","Low heel in black or navy — 2 inches max","Sheer hosiery","Small studs only in gold, silver or pearl","None","A dark, fitted suit communicates professionalism and respect — which itself supports your credibility.")
+    add("Bench Trial","Client","Female",2,"Dark blazer in navy or charcoal + matching trousers or knee skirt","N/A","Flat or low block heel in black","Sheer hosiery or opaque tights","Small stud earrings","None","A blazer is the single item that most elevates any civilian court appearance.")
+    add("Bench Trial","Client","Female",3,"Dark sheath dress at or below the knee + structured blazer","N/A","Modest heel or flat in dark neutral","Sheer hosiery","None","None","Keep accessories minimal — nothing that moves, catches light, or makes sound.")
+    add("Bench Trial","Client","Female",4,"Dark pressed trousers + neat fitted blouse in white or neutral tone","N/A","Flat shoes in dark neutral","Sheer hosiery or trouser socks","None","None","A blouse in white or cream over dark trousers reads cleanly and respectfully.")
+    add("Bench Trial","Client","Female",5,"Dark knee-length or longer skirt + neat fitted top in a solid neutral","N/A","Flat shoes, clean and unscuffed","Sheer hosiery recommended","None","None","Knee-length or below; avoid anything sheer, fitted, or patterned.")
+    add("Bench Trial","Client","Female",6,"Any dark pressed outfit that covers the knees and shoulders","N/A","Clean closed-toe footwear","Any dark hosiery","None","None","Pressed, modest, dark, and clean is the irreducible minimum before any judge.")
 
     # ── DEPOSITION ────────────────────────────────────────────────────────────
     add("Deposition","Attorney","Male",1,"Navy fresco single-breasted","Silver mogadore","Black cap-toe oxford","Navy OTC","Gold oval cuff links","White silk TV fold","Deposition signals professional investment to opposing counsel — fresco at the top.")
@@ -202,18 +203,18 @@ def build_wardrobe():
     add("Deposition","Attorney","Female",4,"Dark navy blazer + matching trousers","N/A","Low block heel","Sheer navy","Small stud earrings; one ring","None","Matched separates are indistinguishable from a suit in video depositions.")
     add("Deposition","Attorney","Female",5,"Charcoal sheath + blazer","N/A","Kitten heel","Sheer nude","Small gold studs","None","Sheath under blazer allows natural movement during extended questioning.")
     add("Deposition","Attorney","Female",6,"Navy straight-leg trousers + structured blazer","N/A","Flat","Sheer nude","Pearl studs","None","Trousers plus blazer is the reliable fallback for any deposition setting.")
-    add("Deposition","Client","Male",1,"Dark suit","Conservative tie","Polished shoes","Dark socks","None","None","Dress as if testifying before a judge — the record includes your appearance.")
-    add("Deposition","Client","Male",2,"Navy blazer + dark trousers","Solid tie","Dark shoes","Dark socks","None","None","Business professional is the appropriate register — no lower.")
-    add("Deposition","Client","Male",3,"Dark separates","Tie optional","Dark shoes","Dark socks","None","None","Avoid casual clothing — opposing counsel notes everything.")
-    add("Deposition","Client","Male",4,"Dark trousers + button-down","No tie","Dark shoes","Dark socks","None","None","At minimum: a neat button-down in a dark color.")
-    add("Deposition","Client","Male",5,"Business casual separates","No tie","Clean shoes","Matching socks","None","None","Business casual is the minimum — avoid jeans or athletic wear.")
-    add("Deposition","Client","Male",6,"Neat collared shirt + dark trousers","No tie","Clean shoes","Any socks","None","None","You are being recorded — dress accordingly.")
-    add("Deposition","Client","Female",1,"Dark suit or pantsuit","N/A","Low heel","Hosiery","Small studs","None","You are on record — dress with the same care as a court appearance.")
-    add("Deposition","Client","Female",2,"Dark blazer + trousers","N/A","Low heel","Hosiery","Small earrings","None","Professional and understated is the correct register.")
-    add("Deposition","Client","Female",3,"Dark sheath + blazer","N/A","Modest heel","Hosiery","Small earrings","None","Keep everything modest; you may be videotaped.")
-    add("Deposition","Client","Female",4,"Dark trousers + neat blouse","N/A","Flat","Socks","None","None","Neat and professional — avoid casual fabrics or loud patterns.")
-    add("Deposition","Client","Female",5,"Dark skirt + blouse","N/A","Flat","Hosiery","None","None","Below the knee and modest is the reliable floor.")
-    add("Deposition","Client","Female",6,"Any neat dark outfit","N/A","Flat footwear","Any","None","None","Pressed, dark, modest — the irreducible standard for any deposition.")
+    add("Deposition","Client","Male",1,"Dark wool suit in navy or charcoal — pressed and well-fitted","Conservative solid or stripe tie in navy, grey or burgundy","Polished black or dark brown lace-up leather shoes","Dark OTC socks matching trouser color","None","None","You are on the record — the transcript may include video. Dress as you would for court: dark, fitted, and professional. Opposing counsel will note your appearance.")
+    add("Deposition","Client","Male",2,"Navy blazer + dark matching trousers in wool or ponte","Solid conservative tie","Dark leather dress shoes, polished","Dark matching socks","None","None","Business professional is the correct register. Depositions feel informal but carry the weight of sworn testimony — dress to signal you understand that.")
+    add("Deposition","Client","Male",3,"Dark matched separates — blazer and trousers in coordinating dark shades","Tie optional","Dark leather shoes","Dark socks","None","None","Avoid anything casual — opposing counsel observes everything. Matched dark separates read professionally when a full suit is unavailable.")
+    add("Deposition","Client","Male",4,"Dark pressed trousers + crisp button-down in white or pale blue","No tie","Dark leather shoes","Dark socks","None","None","A crisp collared shirt over dark pressed trousers reads as business casual. Keep it tucked, pressed, and in a solid or subtle stripe.")
+    add("Deposition","Client","Male",5,"Business casual separates — dark chinos or trousers + collared shirt","No tie","Clean leather shoes","Matching socks","None","None","Business casual is the minimum register — avoid jeans, athletic wear, or graphic shirts. You may be on video.")
+    add("Deposition","Client","Male",6,"Neat collared shirt + dark pressed trousers","No tie","Clean closed-toe shoes","Any dark socks","None","None","You are being recorded. At minimum: clean, pressed, collared, and dark trousers. No denim or athletic footwear.")
+    add("Deposition","Client","Female",1,"Dark wool or ponte suit or pantsuit","N/A","Low heel in black or navy","Sheer hosiery","Small stud earrings in gold or pearl","None","You are on record — a structured wool or ponte suit in navy or charcoal communicates professional seriousness on any video recording.")
+    add("Deposition","Client","Female",2,"Dark blazer + matching trousers or knee-length skirt","N/A","Low heel or flat in black","Sheer hosiery","Small stud earrings","None","The blazer anchors the look — without it, even neat separates can read as under-dressed for sworn testimony.")
+    add("Deposition","Client","Female",3,"Dark sheath dress (knee length) + structured blazer","N/A","Modest heel or flat","Sheer hosiery","Small earrings","None","Keep everything modest and camera-ready. Avoid anything that moves visibly, makes noise, or draws attention away from your words.")
+    add("Deposition","Client","Female",4,"Dark pressed trousers + neat fitted blouse in white or neutral","N/A","Flat shoes in dark neutral","Trouser socks or light hosiery","None","None","A white or pale blouse over dark pressed trousers reads cleanly on camera. Avoid casual fabrics, loud patterns, or anything sheer.")
+    add("Deposition","Client","Female",5,"Dark knee-length skirt + solid blouse in white or neutral","N/A","Flat shoes, unscuffed","Sheer hosiery","None","None","Below the knee and modest is the reliable floor. Solid, dark, and simple photographs best.")
+    add("Deposition","Client","Female",6,"Any neat dark outfit covering knees and shoulders","N/A","Flat closed-toe footwear","Any","None","None","Pressed, dark, modest — the irreducible standard for sworn testimony. You may be on camera.")
 
     # ── MEDIATION ─────────────────────────────────────────────────────────────
     add("Mediation","Attorney","Male",1,"Navy hopsack single-breasted","Burgundy grenadine","Dark brown derby","Navy OTC","No cuff links","White linen","Mediation calls for approachability — hopsack and derby soften without abandoning authority.")
@@ -228,18 +229,18 @@ def build_wardrobe():
     add("Mediation","Attorney","Female",4,"Navy straight-leg trousers + blazer","N/A","Brown loafer heel","Sheer navy","Gold studs, a watch","None","Loafer heels introduce approachability appropriate for settlement conversations.")
     add("Mediation","Attorney","Female",5,"Mid-blue sheath + blazer","N/A","Block heel","Sheer blue","Gold or pearl earrings, a watch — nothing elaborate","None","A slightly lighter blue signals openness to resolution.")
     add("Mediation","Attorney","Female",6,"Charcoal separates","N/A","Flat or low heel","Sheer nude","Gold or pearl earrings, a watch — nothing elaborate","None","Reliable fallback — pressed and professional is sufficient.")
-    add("Mediation","Client","Male",1,"Business professional suit","Conservative tie","Polished shoes","Dark socks","None","None","Your visual presentation signals whether you are serious about settlement.")
-    add("Mediation","Client","Male",2,"Navy blazer + dark trousers","Tie optional","Dark shoes","Dark socks","None","None","Business professional reads readiness to negotiate in good faith.")
-    add("Mediation","Client","Male",3,"Dark separates","No tie","Clean shoes","Dark socks","None","None","Neat business attire — mediation is less formal than court but still professional.")
-    add("Mediation","Client","Male",4,"Dark trousers + button-down","No tie","Clean shoes","Matching socks","None","None","Business casual is the minimum — avoid anything too casual.")
-    add("Mediation","Client","Male",5,"Neat chinos + collared shirt","No tie","Clean leather shoes","Matching socks","None","None","Mediation tolerates smart casual, but err on the side of more formal.")
-    add("Mediation","Client","Male",6,"Clean collared shirt + trousers","No tie","Clean footwear","Any socks","None","None","At minimum: collared, pressed, and presentable.")
-    add("Mediation","Client","Female",1,"Business professional attire","N/A","Low heel or flat","Hosiery","Small jewelry","None","Mediation rewards professional dress — it signals you're serious.")
-    add("Mediation","Client","Female",2,"Dark blazer + trousers","N/A","Low heel","Hosiery","Small earrings","None","Approachable professionalism is the target register for mediation.")
-    add("Mediation","Client","Female",3,"Dark sheath + blazer","N/A","Modest heel","Hosiery","Small earrings","None","Neat and professional — no louder than business professional.")
-    add("Mediation","Client","Female",4,"Dark trousers + neat blouse","N/A","Flat","Any","Small earrings","None","Business casual is acceptable at this rank; stay neat and modest.")
-    add("Mediation","Client","Female",5,"Smart casual separates","N/A","Flat or low heel","Any","Simple jewelry","None","Smart casual is sufficient for lower-stakes mediations.")
-    add("Mediation","Client","Female",6,"Neat pressed outfit","N/A","Comfortable shoes","Any","None","None","Pressed and modest is the floor for any professional proceeding.")
+    add("Mediation","Client","Male",1,"Dark wool suit in navy or charcoal — business professional register","Conservative tie optional but recommended","Polished leather dress shoes","Dark matching socks","None","None","Your visual presentation signals whether you are genuinely serious about reaching resolution. A professional appearance tells the mediator and opposing party that you are engaged and credible.")
+    add("Mediation","Client","Male",2,"Navy blazer + dark wool or ponte trousers","Tie optional","Dark leather shoes, clean and polished","Dark matching socks","None","None","A blazer and dark trousers in a structured fabric project investment without the full formality of a suit.")
+    add("Mediation","Client","Male",3,"Dark matched separates in navy or charcoal","No tie needed","Dark leather shoes","Dark socks","None","None","Mediation is less formal than court but more formal than a business meeting. Neat matched separates communicate professional engagement.")
+    add("Mediation","Client","Male",4,"Dark pressed chinos or trousers + collared shirt in white or pale blue","No tie","Clean leather shoes","Matching dark socks","None","None","Business casual is the minimum register. Avoid anything too casual — the mediator and opposing party form impressions that affect the outcome.")
+    add("Mediation","Client","Male",5,"Smart chinos in dark navy or charcoal + neat polo or button-down","No tie","Clean leather shoes","Matching socks","None","None","A polo in a solid dark color is acceptable only if perfectly pressed. Mediation tolerates smart casual for lower-stakes matters.")
+    add("Mediation","Client","Male",6,"Clean collared shirt in solid color + dark pressed trousers","No tie","Clean closed-toe footwear","Any dark socks","None","None","At minimum: collared, pressed, and presentable. Your appearance affects how seriously your position is taken.")
+    add("Mediation","Client","Female",1,"Dark professional suit or pantsuit in wool or ponte fabric","N/A","Low heel or flat in dark neutral","Sheer hosiery","Small stud jewelry","None","A structured suit in navy or charcoal communicates credibility to both the mediator and opposing counsel.")
+    add("Mediation","Client","Female",2,"Dark blazer + matching trousers or knee-length skirt","N/A","Low heel or flat","Sheer hosiery or opaque tights","Small earrings","None","A blazer over coordinating separates reads as business professional without the full formality of a suit.")
+    add("Mediation","Client","Female",3,"Dark sheath dress + structured blazer","N/A","Modest heel or flat","Sheer hosiery","Small earrings","None","A sheath under a blazer is versatile and consistently reads as prepared and credible.")
+    add("Mediation","Client","Female",4,"Dark pressed trousers + neat blouse in white or neutral tone","N/A","Flat shoes in dark neutral","Any hosiery","Small earrings","None","Business casual is acceptable — stay neat, modest, and in dark or neutral tones. Avoid casual fabrics like jersey, denim, or athletic materials.")
+    add("Mediation","Client","Female",5,"Smart casual separates in dark or neutral tones","N/A","Flat or low heel","Any","Simple jewelry","None","Smart casual is sufficient for lower-stakes mediations — but always err toward more formal when the stakes are high.")
+    add("Mediation","Client","Female",6,"Any neat pressed outfit in dark or neutral tones","N/A","Comfortable closed-toe shoes","Any","None","None","Pressed and modest is the floor for any professional proceeding. Even at the most casual register, avoid jeans or athletic wear.")
 
     # ── OFFICE DAY ────────────────────────────────────────────────────────────
     add("Office Day","Attorney","Male",1,"Navy fresco suit","Silk repp tie","Dark brown derby","Navy OTC","No cuff links","White linen","Office day calls for polished but practical — fresco moves well and photographs cleanly.")
@@ -254,18 +255,18 @@ def build_wardrobe():
     add("Office Day","Attorney","Female",4,"Navy sheath + blazer","N/A","Low pump","Sheer navy","Gold or pearl earrings, a watch — nothing elaborate","None","A sheath under blazer is the reliable standard for non-appearance office days.")
     add("Office Day","Attorney","Female",5,"Charcoal wide-leg trousers + blazer","N/A","Flat leather","Sheer or opaque","Gold or pearl earrings, a watch — nothing elaborate","None","Wide-leg trousers signal fashion awareness while maintaining professional register.")
     add("Office Day","Attorney","Female",6,"Neat blouse + matching trousers","N/A","Flat or low heel","Any","Simple jewelry","None","Neat separates with a blazer close at hand covers any unexpected client encounter.")
-    add("Office Day","Client","Male",1,"Business professional","Tie optional","Polished shoes","Dark socks","None","None","Dress for the firm's culture, not just the calendar.")
-    add("Office Day","Client","Male",2,"Smart business casual","No tie","Clean leather shoes","Matching socks","None","None","Business casual is the standard for most modern law firm offices.")
-    add("Office Day","Client","Male",3,"Chinos + collared shirt + blazer","No tie","Clean shoes","Matching socks","None","None","Smart casual reads professional in casual office environments.")
-    add("Office Day","Client","Male",4,"Chinos + neat polo","No tie","Clean leather shoes","Matching socks","None","None","Polo and chinos is smart casual floor — appropriate for internal office visits.")
-    add("Office Day","Client","Male",5,"Dark jeans + neat collared shirt","No tie","Clean shoes","Matching socks","None","None","Dark jeans in a casual firm are acceptable if the shirt is crisp.")
-    add("Office Day","Client","Male",6,"Clean casual wear","No tie","Clean footwear","Any","None","None","Casual office environments have wide latitude — avoid only very sloppy or revealing clothing.")
-    add("Office Day","Client","Female",1,"Business professional","N/A","Low heel or flat","Hosiery","Simple jewelry","None","Match the firm's dress culture — when uncertain, go more formal.")
-    add("Office Day","Client","Female",2,"Business casual separates","N/A","Low heel or flat","Any","Simple earrings","None","Business casual is the standard for most office visits.")
-    add("Office Day","Client","Female",3,"Smart blouse + trousers or skirt","N/A","Flat","Any","Simple earrings","None","Smart casual covers most modern professional office environments.")
-    add("Office Day","Client","Female",4,"Neat casual separates","N/A","Flat","Any","Simple jewelry","None","Neat and put-together is the minimum for any professional office.")
-    add("Office Day","Client","Female",5,"Dark jeans + neat blouse","N/A","Clean shoes","Any","Simple jewelry","None","Dark jeans plus a neat top are acceptable in casual law firm environments.")
-    add("Office Day","Client","Female",6,"Any neat casual outfit","N/A","Clean footwear","Any","None","None","Avoid only very casual or revealing clothing in any professional space.")
+    add("Office Day","Client","Male",1,"Business professional suit or blazer and trousers — match the firm's culture","Tie optional depending on firm formality","Polished leather shoes","Dark matching socks","None","None","Dress for the firm's culture. A top-tier litigation firm expects business professional even on ordinary days.")
+    add("Office Day","Client","Male",2,"Smart business casual — dark chinos or trousers + collared shirt + optional blazer","No tie needed","Clean leather shoes","Matching socks","None","None","Business casual is the standard for most modern law firm office visits. A blazer over a collared shirt reads as polished and prepared.")
+    add("Office Day","Client","Male",3,"Dark chinos + neat collared shirt + blazer or sport coat","No tie","Clean leather or dress shoes","Matching socks","None","None","Smart casual reads professional in most office environments. The blazer signals intentionality.")
+    add("Office Day","Client","Male",4,"Dark chinos or pressed jeans + neat polo or button-down","No tie","Clean leather shoes","Matching socks","None","None","Polo and chinos is smart casual floor — keep everything pressed and in solid or subtle tones.")
+    add("Office Day","Client","Male",5,"Dark jeans (no distressing) + neat collared shirt in solid color","No tie","Clean leather or casual shoes","Matching socks","None","None","Dark undistressed jeans are acceptable in casual firms if the shirt is crisp. Avoid graphic tees or athletic footwear.")
+    add("Office Day","Client","Male",6,"Clean casual wear in neutral or dark tones — collared preferred","No tie","Clean closed-toe footwear","Any","None","None","Casual office environments have wide latitude — avoid only very sloppy, stained, or revealing clothing.")
+    add("Office Day","Client","Female",1,"Business professional — suit, pantsuit, or polished separates matching firm culture","N/A","Low heel or pointed flat","Hosiery or trouser socks","Simple professional jewelry","None","Match the firm's dress culture — when uncertain, go more formal. A well-fitted blazer over coordinating pieces is consistently appropriate.")
+    add("Office Day","Client","Female",2,"Business casual — blazer or structured cardigan + neat trousers or skirt","N/A","Low heel or flat","Any","Simple earrings or a watch","None","A structured top over dark pressed trousers or a knee-length skirt reads as professional and prepared.")
+    add("Office Day","Client","Female",3,"Smart blouse or top + tailored trousers or a-line skirt in dark or neutral tone","N/A","Flat or low block heel","Any","Simple earrings","None","Smart casual covers most modern professional office environments — as long as fabrics are structured and colors are neutral or dark.")
+    add("Office Day","Client","Female",4,"Neat casual separates in dark or neutral tones — avoid logos or graphics","N/A","Flat shoes in dark or neutral","Any","Simple jewelry","None","Neat and put-together is the minimum for any professional office.")
+    add("Office Day","Client","Female",5,"Dark jeans (no distressing) + neat blouse or fitted top","N/A","Clean shoes in neutral tone","Any","Simple jewelry","None","Dark jeans plus a neat top are acceptable in casual law firm environments — keep colors simple and avoid anything very fitted or revealing.")
+    add("Office Day","Client","Female",6,"Any neat casual outfit in neutral or dark tones","N/A","Clean closed-toe footwear","Any","None","None","Avoid only very casual, revealing, or sloppy clothing in any professional space.")
 
     # ── CLIENT MEETING ────────────────────────────────────────────────────────
     add("Client Meeting","Attorney","Male",1,"Navy serge single-breasted","Solid burgundy silk","Black cap-toe oxford","Navy OTC","Silver oval cuff links","White linen TV fold","Client meetings reward visual consistency — navy serge is universally trustworthy.")
@@ -280,18 +281,18 @@ def build_wardrobe():
     add("Client Meeting","Attorney","Female",4,"Navy blazer + matching straight-leg trousers","N/A","Brown loafer heel","Sheer navy","Gold or pearl earrings, a watch — nothing elaborate","None","Loafer heel introduces slight informality appropriate for established client relationships.")
     add("Client Meeting","Attorney","Female",5,"Charcoal blazer + sheath dress","N/A","Kitten heel","Sheer nude","Gold or pearl earrings, a watch — nothing elaborate","None","Blazer over sheath is the flexible all-situation option for recurring client meetings.")
     add("Client Meeting","Attorney","Female",6,"Neat structured separates","N/A","Low heel or flat","Sheer or opaque","Gold or pearl earrings, a watch — nothing elaborate","None","Neat and structured covers any client meeting scenario as a reliable fallback.")
-    add("Client Meeting","Client","Male",1,"Business professional","Conservative tie","Polished shoes","Dark socks","None","None","When meeting legal counsel, business professional reads seriousness about your matter.")
-    add("Client Meeting","Client","Male",2,"Blazer + dark trousers","Tie optional","Dark shoes","Dark socks","None","None","Blazer plus trousers is widely appropriate for law firm visits.")
-    add("Client Meeting","Client","Male",3,"Smart business casual","No tie","Clean shoes","Matching socks","None","None","Business casual is acceptable for most client meeting contexts.")
-    add("Client Meeting","Client","Male",4,"Chinos + neat button-down","No tie","Clean leather shoes","Matching socks","None","None","Smart casual reads appropriately for informal or ongoing-relationship visits.")
-    add("Client Meeting","Client","Male",5,"Smart casual","No tie","Clean shoes","Matching socks","None","None","Most modern law firms accommodate smart casual for established client relationships.")
-    add("Client Meeting","Client","Male",6,"Neat collared casual","No tie","Clean footwear","Any","None","None","At minimum: collared, clean, and presentable.")
-    add("Client Meeting","Client","Female",1,"Business professional","N/A","Low heel","Hosiery","Modest jewelry","None","Dress professionally — your attorney represents you; your appearance supports that narrative.")
-    add("Client Meeting","Client","Female",2,"Business casual suit or blazer","N/A","Low heel or flat","Any","Simple earrings","None","A blazer over separates elevates any law firm visit.")
-    add("Client Meeting","Client","Female",3,"Smart separates","N/A","Flat or low heel","Any","Simple earrings","None","Smart and neat covers most client meeting scenarios comfortably.")
-    add("Client Meeting","Client","Female",4,"Neat blouse + trousers or skirt","N/A","Flat","Any","Simple jewelry","None","Business casual is widely accepted — avoid only very casual fabrics.")
-    add("Client Meeting","Client","Female",5,"Smart casual separates","N/A","Flat","Any","Any modest jewelry","None","Smart casual is appropriate for most ongoing relationship meetings.")
-    add("Client Meeting","Client","Female",6,"Neat pressed outfit","N/A","Clean footwear","Any","None","None","Neat and put-together is always sufficient for a law office visit.")
+    add("Client Meeting","Client","Male",1,"Business professional suit in navy or charcoal — wool or wool blend preferred","Conservative tie in navy, grey or burgundy","Polished leather dress shoes","Dark matching socks","None","None","When meeting legal counsel for the first time or a high-stakes update, business professional communicates that you understand the seriousness of your matter.")
+    add("Client Meeting","Client","Male",2,"Navy blazer + dark trousers in wool or ponte — coordinated and pressed","Tie optional","Clean polished leather shoes","Dark matching socks","None","None","A structured fabric in a dark shade signals investment without requiring a full suit.")
+    add("Client Meeting","Client","Male",3,"Smart business casual — dark chinos or trousers + neat collared shirt + blazer","No tie","Clean leather shoes","Matching socks","None","None","Business casual is appropriate for most client meeting contexts. The blazer is the key item — it lifts any outfit into professional territory.")
+    add("Client Meeting","Client","Male",4,"Dark pressed chinos + neat button-down in white or pale blue","No tie","Clean leather shoes","Matching socks","None","None","Smart casual reads appropriately for informal or long-standing relationship visits. Keep everything pressed and avoid casual fabrics or loud patterns.")
+    add("Client Meeting","Client","Male",5,"Smart casual separates — dark trousers or chinos + polo or collared shirt","No tie","Clean shoes","Matching socks","None","None","Most modern law firms accommodate smart casual for established client relationships.")
+    add("Client Meeting","Client","Male",6,"Neat collared casual outfit in dark or neutral tones","No tie","Clean closed-toe footwear","Any","None","None","At minimum: collared, clean, and presentable. Your appearance reflects on both you and your matter.")
+    add("Client Meeting","Client","Female",1,"Business professional — dark suit, pantsuit, or polished skirt suit in wool or ponte","N/A","Low heel in black or navy","Sheer hosiery","Modest jewelry — small studs or a simple chain","None","Your attorney represents you; your appearance supports that narrative. Business professional dress communicates credibility and investment in your own case.")
+    add("Client Meeting","Client","Female",2,"Business casual — blazer or structured jacket + neat separates","N/A","Low heel or pointed flat","Hosiery or trouser socks","Simple earrings or a watch","None","A blazer over coordinating separates elevates any law firm visit. In dark or neutral tones, it reads as professional and prepared.")
+    add("Client Meeting","Client","Female",3,"Smart separates — neat blouse or top + tailored trousers or a-line skirt","N/A","Flat or low block heel","Any","Simple earrings","None","Smart and neat covers most client meeting scenarios. Keep fabrics structured and colors neutral or dark.")
+    add("Client Meeting","Client","Female",4,"Neat blouse + pressed dark trousers or knee-length skirt","N/A","Flat shoes in dark neutral","Any","Simple jewelry","None","Business casual is widely accepted for ongoing relationship meetings. Keep it neat, modest, and in solid or subtle tones.")
+    add("Client Meeting","Client","Female",5,"Smart casual separates in dark or neutral tones","N/A","Flat or low heel","Any","Any modest jewelry","None","Smart casual is appropriate for most ongoing or informal relationship meetings.")
+    add("Client Meeting","Client","Female",6,"Any neat pressed outfit in neutral or dark tones","N/A","Clean closed-toe footwear","Any","None","None","Neat and put-together is always sufficient for any law office visit.")
 
     # ── SETTLEMENT CONFERENCE ─────────────────────────────────────────────────
     add("Settlement Conference","Attorney","Male",1,"Navy fresco","Muted repp tie","Black oxford","Navy OTC","Silver cuff links","White linen","Settlement conferences reward professional authority tempered with approachability.")
@@ -306,18 +307,18 @@ def build_wardrobe():
     add("Settlement Conference","Attorney","Female",4,"Navy hopsack separates","N/A","Low block heel","Sheer navy","Gold or pearl earrings, a watch — nothing elaborate","None","Hopsack reads ready to resolve without signaling submission.")
     add("Settlement Conference","Attorney","Female",5,"Charcoal sheath + blazer","N/A","Kitten heel","Sheer nude","Gold or pearl earrings, a watch — nothing elaborate","None","Classic professional register — covers any settlement conference dynamic.")
     add("Settlement Conference","Attorney","Female",6,"Neat structured blazer + separates","N/A","Flat","Sheer nude","Gold or pearl earrings, a watch — nothing elaborate","None","Reliable and professional in any context.")
-    add("Settlement Conference","Client","Male",1,"Business professional suit","Conservative tie","Polished shoes","Dark socks","None","None","How you dress signals how seriously you take settlement — dress professionally.")
-    add("Settlement Conference","Client","Male",2,"Blazer + dark trousers","Tie optional","Dark shoes","Dark socks","None","None","Professional appearance supports your negotiating credibility.")
-    add("Settlement Conference","Client","Male",3,"Smart business casual","No tie","Clean shoes","Dark socks","None","None","Business casual is appropriate for most settlement contexts.")
-    add("Settlement Conference","Client","Male",4,"Chinos + button-down","No tie","Clean shoes","Matching socks","None","None","Neat and professional — avoid looking like you don't care.")
-    add("Settlement Conference","Client","Male",5,"Smart casual","No tie","Clean leather shoes","Matching socks","None","None","Smart casual is the minimum for settlement discussions.")
-    add("Settlement Conference","Client","Male",6,"Neat collared casual","No tie","Clean footwear","Any","None","None","At minimum: clean, pressed, and respectful.")
-    add("Settlement Conference","Client","Female",1,"Business professional","N/A","Low heel","Hosiery","Modest jewelry","None","Professional dress supports your position at the settlement table.")
-    add("Settlement Conference","Client","Female",2,"Blazer + separates","N/A","Low heel","Any","Simple earrings","None","A blazer elevates any negotiation appearance.")
-    add("Settlement Conference","Client","Female",3,"Smart casual separates","N/A","Flat or low heel","Any","Simple earrings","None","Neat and professional is appropriate for most settlement contexts.")
-    add("Settlement Conference","Client","Female",4,"Neat blouse + trousers","N/A","Flat","Any","Simple jewelry","None","Business casual is sufficient for most settlement conferences.")
-    add("Settlement Conference","Client","Female",5,"Smart casual","N/A","Flat","Any","Simple jewelry","None","Smart casual is the minimum register for any settlement proceeding.")
-    add("Settlement Conference","Client","Female",6,"Any neat pressed outfit","N/A","Clean footwear","Any","None","None","Pressed, modest, professional — always appropriate.")
+    add("Settlement Conference","Client","Male",1,"Business professional suit in navy or charcoal wool","Conservative tie","Polished leather dress shoes","Dark matching socks","None","None","How you dress signals how seriously you take settlement. A professional appearance tells the opposing party that you are credible, prepared, and invested in resolution — which strengthens your negotiating position.")
+    add("Settlement Conference","Client","Male",2,"Navy blazer + dark wool or ponte trousers","Tie optional","Polished leather shoes","Dark matching socks","None","None","A blazer over dark trousers in a structured fabric reads as business professional and signals good-faith engagement.")
+    add("Settlement Conference","Client","Male",3,"Smart business casual — dark chinos or trousers + collared shirt + optional blazer","No tie","Clean leather shoes","Dark socks","None","None","Business casual is appropriate for most settlement contexts — but the more important the settlement, the more formal you should dress.")
+    add("Settlement Conference","Client","Male",4,"Dark pressed chinos + neat button-down shirt","No tie","Clean leather shoes","Matching socks","None","None","Avoid looking like you don't care. The opposing party's perception of your seriousness affects the settlement dynamic.")
+    add("Settlement Conference","Client","Male",5,"Smart casual separates — dark trousers or chinos + polo or collared shirt","No tie","Clean leather shoes","Matching socks","None","None","Smart casual is the minimum register. The stakes of a settlement warrant more effort than everyday casual dress.")
+    add("Settlement Conference","Client","Male",6,"Neat collared outfit in dark or neutral tones","No tie","Clean closed-toe footwear","Any","None","None","At minimum: clean, pressed, and respectful. Your appearance at the settlement table is part of your presentation.")
+    add("Settlement Conference","Client","Female",1,"Dark professional suit or pantsuit in wool or ponte — navy or charcoal","N/A","Low heel in dark neutral","Sheer hosiery","Small stud jewelry","None","A structured suit communicates credibility and investment — qualities that matter when opposing counsel sizes up your resolve.")
+    add("Settlement Conference","Client","Female",2,"Dark blazer + matching separates in structured fabric","N/A","Low heel or pointed flat","Sheer hosiery","Simple earrings","None","In navy or charcoal, a blazer over coordinating separates reads as business professional without the full formality of a suit.")
+    add("Settlement Conference","Client","Female",3,"Smart casual separates in dark or neutral tones + blazer if available","N/A","Flat or low heel","Any","Simple earrings","None","The more financially significant the settlement, the more formal your dress should be.")
+    add("Settlement Conference","Client","Female",4,"Neat blouse + dark pressed trousers or knee skirt","N/A","Flat shoes in dark neutral","Any","Simple jewelry","None","Business casual is sufficient — stay neat, modest, and in dark or neutral tones.")
+    add("Settlement Conference","Client","Female",5,"Smart casual separates in structured fabrics","N/A","Flat or low heel","Any","Simple jewelry","None","Smart casual is the minimum register for any settlement proceeding with real financial stakes.")
+    add("Settlement Conference","Client","Female",6,"Any neat pressed outfit in dark or neutral tones","N/A","Clean closed-toe footwear","Any","None","None","Pressed, modest, and professional — always the correct baseline at a settlement table.")
 
     # ── ARBITRATION ───────────────────────────────────────────────────────────
     add("Arbitration","Attorney","Male",1,"Charcoal gabardine","Burgundy repp","Black cap-toe oxford","Black OTC","Gold bar cuff links","White linen TV fold","Arbitrators often come from specific industry backgrounds — read them before proceeding.")
@@ -332,18 +333,18 @@ def build_wardrobe():
     add("Arbitration","Attorney","Female",4,"Dark navy hopsack separates","N/A","Low block heel","Sheer navy","Small stud earrings; one ring","None","Hopsack for multi-day arbitration — maintains structure throughout.")
     add("Arbitration","Attorney","Female",5,"Charcoal blazer + sheath","N/A","Kitten heel","Sheer nude","Pearl or gold studs","None","Classic professional register for any arbitration dynamic.")
     add("Arbitration","Attorney","Female",6,"Structured separates in dark tones","N/A","Flat","Sheer nude","Pearl studs","None","Reliable fallback — structured and dark covers any arbitration context.")
-    add("Arbitration","Client","Male",1,"Business professional suit","Conservative tie","Polished shoes","Dark socks","None","None","Arbitration is quasi-judicial — dress as you would for court.")
-    add("Arbitration","Client","Male",2,"Blazer + dark trousers","Tie optional","Dark shoes","Dark socks","None","None","Professional dress signals respect for the arbitration process.")
-    add("Arbitration","Client","Male",3,"Smart business casual","No tie","Clean shoes","Dark socks","None","None","Business casual is appropriate for less formal arbitrations.")
-    add("Arbitration","Client","Male",4,"Chinos + button-down","No tie","Clean shoes","Matching socks","None","None","Neat casual is acceptable for informal arbitration proceedings.")
-    add("Arbitration","Client","Male",5,"Smart casual","No tie","Clean shoes","Matching socks","None","None","Smart casual signals basic professional engagement.")
-    add("Arbitration","Client","Male",6,"Neat collared attire","No tie","Clean footwear","Any","None","None","Collared and pressed is the minimum standard.")
-    add("Arbitration","Client","Female",1,"Business professional","N/A","Low heel","Hosiery","Modest jewelry","None","Dress for arbitration as you would for court — it carries similar weight.")
-    add("Arbitration","Client","Female",2,"Blazer + separates","N/A","Low heel","Any","Simple earrings","None","Professional attire supports your credibility in the arbitration record.")
-    add("Arbitration","Client","Female",3,"Smart separates","N/A","Flat or low heel","Any","Simple earrings","None","Neat and professional is appropriate for most arbitration settings.")
-    add("Arbitration","Client","Female",4,"Neat blouse + trousers","N/A","Flat","Any","Simple jewelry","None","Business casual covers most non-formal arbitration proceedings.")
-    add("Arbitration","Client","Female",5,"Smart casual separates","N/A","Flat","Any","Simple jewelry","None","Smart casual is the minimum for any arbitration context.")
-    add("Arbitration","Client","Female",6,"Any neat pressed outfit","N/A","Clean footwear","Any","None","None","Pressed and modest is always acceptable.")
+    add("Arbitration","Client","Male",1,"Dark wool suit in navy or charcoal — arbitration is quasi-judicial","Conservative tie in navy, grey or burgundy","Polished leather dress shoes","Dark matching socks","None","None","Arbitration carries the same weight as court. A dark wool suit signals that you understand the seriousness of the proceeding and respect the arbitrator's authority.")
+    add("Arbitration","Client","Male",2,"Navy blazer + dark wool or ponte trousers","Conservative tie or no tie","Polished leather shoes","Dark matching socks","None","None","A blazer and dark trousers in structured fabric reads as business professional — appropriate for any arbitration panel.")
+    add("Arbitration","Client","Male",3,"Smart business casual — dark chinos or trousers + collared shirt + blazer","No tie","Clean leather shoes","Dark socks","None","None","Business casual with a blazer is appropriate for less formal arbitrations. The blazer is non-negotiable — it marks the register as professional.")
+    add("Arbitration","Client","Male",4,"Dark pressed chinos + neat collared shirt in white or pale blue","No tie","Clean leather shoes","Matching socks","None","None","Neat casual is acceptable for informal arbitration proceedings — but keep it pressed, dark, and collared.")
+    add("Arbitration","Client","Male",5,"Smart casual separates — dark trousers + collared shirt","No tie","Clean shoes","Matching socks","None","None","Smart casual signals basic professional engagement with the arbitration process.")
+    add("Arbitration","Client","Male",6,"Neat collared attire in dark or neutral tones","No tie","Clean closed-toe footwear","Any","None","None","Collared and pressed is the minimum standard — no denim, athletic wear, or graphic shirts.")
+    add("Arbitration","Client","Female",1,"Dark professional suit or pantsuit — treat arbitration as you would court","N/A","Low heel in dark neutral","Sheer hosiery","Small stud jewelry","None","A dark structured suit communicates credibility, preparedness, and respect for the panel — all qualities that support your position.")
+    add("Arbitration","Client","Female",2,"Dark blazer + matching separates in structured fabric","N/A","Low heel or flat","Sheer hosiery","Simple earrings","None","A blazer over coordinating dark separates reads as business professional — appropriate for any arbitration setting.")
+    add("Arbitration","Client","Female",3,"Smart separates in dark or neutral tones + blazer","N/A","Flat or low heel","Any","Simple earrings","None","Neat and professional is appropriate for most arbitration settings. Always include a blazer when possible.")
+    add("Arbitration","Client","Female",4,"Neat blouse + dark pressed trousers or skirt","N/A","Flat shoes in dark neutral","Any","Simple jewelry","None","Business casual covers most non-formal arbitration proceedings — stay neat, dark, and modest.")
+    add("Arbitration","Client","Female",5,"Smart casual separates in structured fabrics","N/A","Flat or low heel","Any","Simple jewelry","None","Smart casual is the minimum for any arbitration context with real stakes.")
+    add("Arbitration","Client","Female",6,"Any neat pressed outfit in dark or neutral tones","N/A","Clean closed-toe footwear","Any","None","None","Pressed and modest is always acceptable — never arrive in denim or athletic wear.")
 
     # ── APPELLATE ARGUMENT ────────────────────────────────────────────────────
     add("Appellate Argument","Attorney","Male",1,"Charcoal gabardine two-button","Midnight blue silk repp","Black cap-toe oxford","Black OTC","Gold oval cuff links","White linen TV fold","Appellate courts demand maximum visual authority — charcoal gabardine with gold links is the benchmark.")
@@ -358,18 +359,18 @@ def build_wardrobe():
     add("Appellate Argument","Attorney","Female",4,"Mid-grey gabardine suit","N/A","Black pump 2\"","Sheer grey","Pearl studs only","White linen","Grey gabardine reads scholarly authority — effective before academic appellate panels.")
     add("Appellate Argument","Attorney","Female",5,"Dark navy sharkskin pantsuit","N/A","Black heel 2\"","Sheer navy","Pearl or gold stud earrings only","None","Sharkskin signals maximum investment for high-profile appellate arguments.")
     add("Appellate Argument","Attorney","Female",6,"Navy flannel suit","N/A","Black kitten heel","Sheer navy","Pearl stud earrings only","White pocket square","Flannel adds warmth while remaining within the strictest appellate dress standards.")
-    add("Appellate Argument","Client","Male",1,"Dark formal suit","Conservative tie","Polished shoes","Dark socks","None","None","Appellate courts are formal — dress as you would for any superior court proceeding.")
-    add("Appellate Argument","Client","Male",2,"Blazer + dark formal trousers","Conservative tie","Polished shoes","Dark socks","None","None","Formal business attire is appropriate for appellate spectators and participants.")
-    add("Appellate Argument","Client","Male",3,"Business professional","Tie optional","Dark shoes","Dark socks","None","None","Professional dress is the minimum for appellate proceedings.")
-    add("Appellate Argument","Client","Male",4,"Dark smart casual","No tie","Clean leather shoes","Dark socks","None","None","Smart casual is acceptable for appellate observers.")
-    add("Appellate Argument","Client","Male",5,"Smart casual","No tie","Clean shoes","Matching socks","None","None","Smart casual is the minimum for appellate court attendance.")
-    add("Appellate Argument","Client","Male",6,"Neat collared attire","No tie","Clean footwear","Any","None","None","Collared and pressed for any appellate appearance.")
-    add("Appellate Argument","Client","Female",1,"Business professional formal","N/A","Low heel","Hosiery","Minimal jewelry","None","Appellate courts are formal — dress as you would for any serious court proceeding.")
-    add("Appellate Argument","Client","Female",2,"Dark suit or formal separates","N/A","Low heel","Hosiery","Small earrings","None","Formal and conservative is the reliable standard for appellate proceedings.")
-    add("Appellate Argument","Client","Female",3,"Dark blazer + formal trousers","N/A","Modest heel","Hosiery","Small earrings","None","Professional dress signals respect for the appellate process.")
-    add("Appellate Argument","Client","Female",4,"Dark neat separates","N/A","Flat","Any","Simple earrings","None","Business casual is appropriate for appellate observers.")
-    add("Appellate Argument","Client","Female",5,"Smart casual separates","N/A","Flat","Any","Simple jewelry","None","Smart casual is the minimum for appellate court attendance.")
-    add("Appellate Argument","Client","Female",6,"Any neat dark outfit","N/A","Clean footwear","Any","None","None","Dark, pressed, and modest is always appropriate.")
+    add("Appellate Argument","Client","Male",1,"Dark formal suit in navy or charcoal wool — most formal outfit you own","Conservative tie in navy, grey or burgundy","Polished leather dress shoes — cap-toe oxford if available","Dark OTC socks","None","None","Appellate courts are the most formal proceedings in the legal system. A dark wool suit is the baseline — no exceptions for business casual.")
+    add("Appellate Argument","Client","Male",2,"Dark blazer + formal dark trousers — matched as closely to a suit as possible","Conservative tie","Polished leather dress shoes","Dark matching socks","None","None","Formal business attire is appropriate for appellate participants and observers alike. Matched blazer and trousers in dark shade read as a suit from a distance.")
+    add("Appellate Argument","Client","Male",3,"Business professional suit or separates — pressed and well-fitted","Tie optional","Dark leather shoes, polished","Dark socks","None","None","Professional dress is the minimum for appellate proceedings. Even as an observer, the courtroom demands a professional appearance.")
+    add("Appellate Argument","Client","Male",4,"Dark smart casual — chinos or trousers + collared shirt + blazer","No tie","Clean leather shoes","Dark socks","None","None","Smart casual with a blazer is the minimum for appellate court attendance. The blazer is essential.")
+    add("Appellate Argument","Client","Male",5,"Smart casual separates in dark or neutral tones","No tie","Clean leather shoes","Matching socks","None","None","Smart casual is the minimum for appellate court attendance as an observer.")
+    add("Appellate Argument","Client","Male",6,"Neat collared attire in dark tones — no jeans or athletic wear","No tie","Clean leather or dress shoes","Any dark socks","None","None","Collared and pressed in dark tones is the floor for any appellate court appearance.")
+    add("Appellate Argument","Client","Female",1,"Business professional formal — dark suit, pantsuit or skirt suit in wool","N/A","Low heel in black or navy — 2 inches max","Sheer hosiery","Minimal jewelry — small studs only","None","Appellate courts are formal. Dress as formally as possible — a dark wool suit or pantsuit is the baseline. This is not the occasion for anything casual.")
+    add("Appellate Argument","Client","Female",2,"Dark formal separates — blazer and skirt or trousers in matching dark shade","N/A","Low heel or pointed flat","Sheer hosiery","Small stud earrings","None","Matched separates in dark wool or ponte read as a suit and are appropriate for any appellate proceeding.")
+    add("Appellate Argument","Client","Female",3,"Dark blazer + formal trousers or knee-length skirt","N/A","Modest heel or flat in black","Sheer hosiery","Small stud earrings","None","A blazer is essential — it is the single item that most clearly marks an outfit as court-appropriate.")
+    add("Appellate Argument","Client","Female",4,"Dark neat separates + blazer","N/A","Flat shoes in dark neutral","Any","Simple earrings","None","Business casual with a blazer is appropriate for appellate observers. Keep everything dark, structured, and conservative.")
+    add("Appellate Argument","Client","Female",5,"Smart casual separates in dark or neutral tones","N/A","Flat or low heel","Any","Simple jewelry","None","Smart casual is the minimum for appellate court attendance — always err toward more formal if possible.")
+    add("Appellate Argument","Client","Female",6,"Any neat dark outfit covering knees and shoulders","N/A","Clean closed-toe footwear","Any","None","None","Dark, pressed, and modest is always appropriate for any appellate appearance.")
 
     # ── NETWORKING EVENT ──────────────────────────────────────────────────────
     add("Networking Event","Attorney","Male",1,"Navy fresco single-breasted","Silk grenadine in interest color","Dark brown suede derby","Navy OTC","Enamel or fabric cuff links","Silk puff in accent color","Networking events allow sartorial personality — one expressive element lifts the entire look.")
@@ -384,18 +385,18 @@ def build_wardrobe():
     add("Networking Event","Attorney","Female",4,"Navy blazer + coordinating dress","N/A","Brown suede heel","Sheer navy","Gold earrings, delicate necklace","None","A blazer over a dress threads the professional-social needle at networking events.")
     add("Networking Event","Attorney","Female",5,"Charcoal wide-leg trousers + structured blouse","N/A","Block heel or loafer","Opaque or sheer","Gold or pearl earrings, a delicate necklace or bracelet","None","Wide-leg trousers signal fashion confidence appropriate for bar and firm networking.")
     add("Networking Event","Attorney","Female",6,"Smart blazer + smart casual separates","N/A","Low heel or flat","Any","Gold or pearl earrings, a delicate necklace or bracelet","None","Smart casual with one jewelry statement is the minimum for professional networking.")
-    add("Networking Event","Client","Male",1,"Business casual or smart casual","Tie optional","Clean leather shoes","Matching socks","None","None","Dress to the level of the event — when uncertain, err toward business casual.")
-    add("Networking Event","Client","Male",2,"Blazer + chinos or smart trousers","No tie","Clean shoes","Matching socks","None","None","Blazer plus chinos is the universal smart casual standard for networking.")
-    add("Networking Event","Client","Male",3,"Smart casual separates","No tie","Clean leather shoes","Matching socks","None","None","Smart casual is widely appropriate for most legal networking events.")
-    add("Networking Event","Client","Male",4,"Chinos + neat collared shirt","No tie","Clean shoes","Matching socks","None","None","Neat casual is acceptable for informal networking gatherings.")
-    add("Networking Event","Client","Male",5,"Smart casual","No tie","Clean shoes","Any","None","None","Any smart casual outfit is appropriate for casual networking.")
-    add("Networking Event","Client","Male",6,"Neat casual outfit","No tie","Clean footwear","Any","None","None","Clean and presentable is sufficient for the most informal networking events.")
-    add("Networking Event","Client","Female",1,"Business casual or cocktail attire","N/A","Modest heel or flat","Any","Any","None","Match the event's level — networking events allow more personal expression.")
-    add("Networking Event","Client","Female",2,"Smart separates or blouse + trousers","N/A","Low heel or flat","Any","Any modest jewelry","None","Smart casual is broadly appropriate for most legal networking events.")
-    add("Networking Event","Client","Female",3,"Neat blouse + trousers or skirt","N/A","Flat or low heel","Any","Simple jewelry","None","Neat and put-together is appropriate across most networking contexts.")
-    add("Networking Event","Client","Female",4,"Smart casual dress or separates","N/A","Flat","Any","Any","None","Smart casual is the reliable floor for networking events of any formality level.")
-    add("Networking Event","Client","Female",5,"Any smart casual outfit","N/A","Flat or low heel","Any","Any","None","Networking tolerates a wide range — avoid only very casual or work-wear clothing.")
-    add("Networking Event","Client","Female",6,"Any neat casual outfit","N/A","Clean footwear","Any","Any","None","Clean and presentable is sufficient for informal networking gatherings.")
+    add("Networking Event","Client","Male",1,"Business casual or smart casual — match the event's stated formality","Tie optional — read the room","Clean leather shoes in dark brown or black","Matching socks","None","None","When uncertain, err toward business casual. A blazer over chinos reads well at any legal networking event regardless of formality level.")
+    add("Networking Event","Client","Male",2,"Navy or charcoal blazer + dark chinos or smart trousers","No tie","Clean leather shoes","Matching socks","None","None","Blazer plus chinos is the universal smart casual standard for networking. It reads as deliberately dressed without the formality of a suit.")
+    add("Networking Event","Client","Male",3,"Smart casual separates — dark chinos or trousers + neat collared shirt","No tie","Clean leather shoes","Matching socks","None","None","Smart casual is widely appropriate for most legal networking events. Keep fabrics structured and colors neutral or dark.")
+    add("Networking Event","Client","Male",4,"Dark chinos + neat collared shirt in solid color","No tie","Clean leather or casual shoes","Matching socks","None","None","Neat casual is acceptable for informal networking — keep it pressed and avoid graphics or logos.")
+    add("Networking Event","Client","Male",5,"Smart casual outfit in neutral or dark tones","No tie","Clean shoes","Any","None","None","Any smart casual outfit is appropriate for casual networking.")
+    add("Networking Event","Client","Male",6,"Neat casual outfit in clean neutral tones","No tie","Clean closed-toe footwear","Any","None","None","Clean and presentable is sufficient for the most informal networking events.")
+    add("Networking Event","Client","Female",1,"Business casual or cocktail-adjacent — match the event's formality level","N/A","Modest heel or elegant flat","Any","Any tasteful jewelry","None","Networking events allow more personal expression. A blazer over a dress or neat separates reads well at any legal networking function.")
+    add("Networking Event","Client","Female",2,"Smart separates or neat blouse + tailored trousers or skirt","N/A","Low heel or elegant flat","Any","Any modest jewelry","None","One expressive jewelry piece or accessory is welcome at networking — this is where personality earns its place.")
+    add("Networking Event","Client","Female",3,"Neat blouse + tailored trousers or a-line skirt in any professional color","N/A","Flat or low heel","Any","Simple or expressive jewelry","None","A bolder color or accessory is perfectly appropriate at networking events.")
+    add("Networking Event","Client","Female",4,"Smart casual dress or separates in any professional tone","N/A","Flat or low heel","Any","Any jewelry you like","None","Smart casual is the reliable floor for networking events of any formality level.")
+    add("Networking Event","Client","Female",5,"Any smart casual outfit — express your personal style within professional range","N/A","Flat or low heel","Any","Any","None","Networking tolerates the widest range of any legal occasion — avoid only very casual or revealing clothing.")
+    add("Networking Event","Client","Female",6,"Any neat casual outfit that feels like you","N/A","Clean footwear","Any","Any","None","Clean and presentable is sufficient for informal networking. This is the one occasion where personal style is genuinely welcome.")
 
     return W
 
@@ -412,6 +413,20 @@ WMO_CODES = {
     80: ("Rain showers", "🌦️"), 81: ("Showers", "🌧️"), 82: ("Violent showers", "⛈️"),
     95: ("Thunderstorm", "⛈️"), 96: ("Thunderstorm + hail", "⛈️"),
 }
+
+def get_coords_from_city(city_name):
+    try:
+        url = f"https://nominatim.openstreetmap.org/search?q={requests.utils.quote(city_name)}&format=json&limit=1"
+        r = requests.get(url, headers={"User-Agent": "HueProcess/1.0"}, timeout=5)
+        results = r.json()
+        if results:
+            lat = float(results[0]["lat"])
+            lon = float(results[0]["lon"])
+            display = results[0].get("display_name", city_name).split(",")[0]
+            return lat, lon, display
+        return None, None, None
+    except Exception:
+        return None, None, None
 
 def get_weather(lat, lon):
     try:
@@ -435,18 +450,6 @@ def get_weather(lat, lon):
         }
     except Exception:
         return None
-
-def get_location_name(lat, lon):
-    try:
-        url = f"https://nominatim.openstreetmap.org/reverse?lat={lat}&lon={lon}&format=json"
-        r = requests.get(url, headers={"User-Agent": "HueProcess/1.0"}, timeout=5)
-        d = r.json()
-        addr = d.get("address", {})
-        city = addr.get("city") or addr.get("town") or addr.get("village") or ""
-        state = addr.get("state", "")
-        return f"{city}, {state}".strip(", ") if city else state or "Your location"
-    except Exception:
-        return "Your location"
 
 def weather_adjustments(w):
     notes = []
@@ -549,15 +552,22 @@ with st.sidebar:
     weather_location = ""
 
     if use_weather:
-        col_lat, col_lon = st.columns(2)
-        lat = col_lat.number_input("Lat", value=36.17, format="%.2f")
-        lon = col_lon.number_input("Lon", value=-86.78, format="%.2f")
+        # Just type your city name — no coordinates needed
+        city_input = st.text_input("Enter your city", placeholder="e.g. Nashville, TN")
         if st.button("Get Weather"):
-            with st.spinner("Fetching…"):
-                weather_data = get_weather(lat, lon)
-                weather_location = get_location_name(lat, lon)
-                st.session_state["weather"] = weather_data
-                st.session_state["weather_loc"] = weather_location
+            if city_input.strip():
+                with st.spinner("Finding your city..."):
+                    lat, lon, display_name = get_coords_from_city(city_input.strip())
+                if lat:
+                    with st.spinner("Fetching weather..."):
+                        weather_data = get_weather(lat, lon)
+                        weather_location = display_name
+                        st.session_state["weather"] = weather_data
+                        st.session_state["weather_loc"] = weather_location
+                else:
+                    st.error("City not found — try a different spelling or add the state (e.g. Nashville, TN).")
+            else:
+                st.warning("Please enter a city name.")
         elif "weather" in st.session_state:
             weather_data = st.session_state["weather"]
             weather_location = st.session_state.get("weather_loc", "")
@@ -574,7 +584,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Weather panel
 if weather_data:
     adj = weather_adjustments(weather_data)
     st.markdown(f"""
@@ -588,7 +597,6 @@ if weather_data:
     </div>
     """, unsafe_allow_html=True)
 
-# Formality header
 formality_map = {
     "Jury Trial": ("Maximum", "#c9a84c"),
     "Bench Trial": ("Maximum", "#c9a84c"),
@@ -612,7 +620,6 @@ st.markdown(f"""
 </div>
 """, unsafe_allow_html=True)
 
-# Get outfits
 outfits = WARDROBE.get(case_type, {}).get(role, {}).get(gender, [])
 outfits_sorted = sorted(outfits, key=lambda o: o.rank)[:ranks_to_show]
 inventory = st.session_state.get("closet", {})
@@ -645,7 +652,6 @@ else:
                 icon = ""
             return f'<div class="item-label">{label}</div><div class="item-value">{icon}{value}</div>{r_html}'
 
-        # Match percentage badge
         if inventory:
             all_fields = [(fn, val) for fn, _, val in fields if val and val.lower() not in ("none", "n/a", "")]
             matched = sum(1 for fn, val in all_fields if closet_matches(fn, val, inventory))
